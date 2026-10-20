@@ -31,7 +31,7 @@ def main():
    assert ('C:'+'/Users/') not in data and ('/mnt/c/'+'Users/') not in data,'Machine-local path in package'
  if args.test:
   with tempfile.TemporaryDirectory(prefix='superjupiter-bundle-check-') as tmp:
-   cmd=['cmake','-S',str(ROOT),'-B',tmp]
+   cmd=['cmake','-S',str(ROOT),'-B',tmp,'-DCMAKE_CXX_STANDARD=11','-DCMAKE_CXX_STANDARD_REQUIRED=ON','-DCMAKE_CXX_EXTENSIONS=OFF']
    if args.compiler:cmd+=['-DCMAKE_CXX_COMPILER='+args.compiler]
    subprocess.run(cmd,check=True);subprocess.run(['cmake','--build',tmp,'-j4'],check=True)
    subprocess.run(['ctest','--test-dir',tmp,'--output-on-failure'],check=True)

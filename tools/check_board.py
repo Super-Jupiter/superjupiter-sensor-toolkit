@@ -11,9 +11,9 @@ def main():
   work=Path(tmp);archive=work/'package.tar.gz'
   subprocess.run([sys.executable,'-m','platformio','pkg','pack','-o',str(archive)],cwd=ROOT,check=True)
   project=work/'consumer';(project/'src').mkdir(parents=True)
-  (project/'src/main.cpp').write_text((ROOT/'examples'/starter/(starter+'.ino')).read_text())
+  (project/'src/main.cpp').write_text('#include <'+pkg+'.h>\n'+(ROOT/'examples'/starter/(starter+'.ino')).read_text())
   platform='atmelavr@5.1.0' if args.board=='uno' else 'espressif32@6.12.0'
-  (project/'platformio.ini').write_text('[env:consumer]\nplatform='+platform+'\nboard='+args.board+'\nframework=arduino\nbuild_flags=-std=gnu++11 -include '+pkg+'.h\nlib_deps=\n    file://'+archive.as_posix()+'\n')
+  (project/'platformio.ini').write_text('[env:consumer]\nplatform='+platform+'\nboard='+args.board+'\nframework=arduino\nbuild_flags=-std=gnu++11\nlib_deps=\n    file://'+archive.as_posix()+'\n')
   subprocess.run([sys.executable,'-m','platformio','run','-d',str(project)],check=True)
  print('PASS packed board compilation; hardware validation pending')
 if __name__=='__main__':main()
